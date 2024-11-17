@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --primary-color: #007bff;
+  --secondary-color: #343a40;
+  --background-color: #f8f9fa;
+  --green:#28a745;
+  --red:#dc3545;
+  --yellow:#ffc107;
+  --text-color:#212529;
+  --form-border: #ccc;
+  --form-focus: #007bff;
+}
+
+*,*::before,*::after{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+body{
+  font-family: 'Poppins', sans-serif;
+  color:var(--text-color);
+  background-color: var(--background-color);
+}
