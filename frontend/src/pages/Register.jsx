@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react'
 import axios from 'axios'
-import {useMutation} from '@tanstack/react-query'
+import {useMutation,useQueryClient} from '@tanstack/react-query'
 import {toast} from 'react-toastify'
 import { Link,useNavigate } from 'react-router-dom'
 
@@ -12,6 +12,7 @@ function Register() {
         f_username:"",
         f_password:""}
     )
+    const queryClient=useQueryClient()
     const navigate = useNavigate();
     const { mutate,error} = useMutation({
         mutationFn: async (user) => {
@@ -34,6 +35,7 @@ function Register() {
         },
         onSuccess: () => {
           toast.success("Account created successfully");
+          queryClient.invalidateQueries({ queryKey: ["authAdmin"] });
           navigate("/login");
           
         },

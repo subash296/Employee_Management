@@ -1,3 +1,4 @@
+import path from "path"
 import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
@@ -13,6 +14,7 @@ import employeeRoute from "./routes/employeeRoute.js"
 dotenv.config()
 const app=express();
 const port=process.env.PORT || 5000
+const __dirname=path.resolve()
 const corsOptions = {
 	origin: 'http://localhost:5000', 
 	credentials: true, 
@@ -36,6 +38,15 @@ cloudinary.config({
 	api_key: process.env.CLOUDINARY_API_KEY,
 	api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+	});
+}
+
 
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`)

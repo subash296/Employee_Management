@@ -81,7 +81,7 @@ export const update=async (req, res) => {
         const { f_Name, f_Email, f_Mobile, f_Designation, f_Gender,f_Course,f_Id,f_Status } = req.body;
         let{ f_Image } = req.body;
         const userId=req.params.id
-        const user=await employeeDetail.findOne({f_Id:userId})
+        const user=await employeeDetail.findById(userId)
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		if (!emailRegex.test(f_Email)) {
 			return res.status(400).json({ error: "Invalid email format" });
@@ -94,12 +94,13 @@ export const update=async (req, res) => {
         if(!user){
             return res.status(400).json({message:"User not found"})
         }
-        if (f_Image) {
+        if (f_Image && f_Image.length !==0) {
+
             if(user.f_Image){
             await cloudinary.uploader.destroy(user.f_Image.split("/").pop().split(".")[0]);
             }
             const result = await cloudinary.uploader.upload(f_Image);
-            f_Image = result.secure_url;
+            user.f_Image = result.secure_url;
          }
         
 
@@ -111,7 +112,7 @@ export const update=async (req, res) => {
         user.f_Course=f_Course || user.f_Course;
         user.f_Id=f_Id || user.f_Id;
         user.f_Status=f_Status || user.f_Status;
-        user.f_Image= f_Image || user.f_Image;
+        user.f_Image=  user.f_Image;
 
         await user.save()
         return res.status(200).json({message:"Employee details updated successfully",data:user})

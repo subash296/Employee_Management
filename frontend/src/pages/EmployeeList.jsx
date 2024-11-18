@@ -19,6 +19,7 @@ function EmployeeDetails() {
   const [order, setOrder] = useState('desc');
   const[totalUsers,setTotalUsers]=useState(0)
   const [limit, setLimit] = useState(3);
+  const [reload, setReload] = useState(false);
   const navigate = useNavigate()
 
  
@@ -29,7 +30,10 @@ function EmployeeDetails() {
     axios.delete(`/api/employee/delete/${id}`,{
       withCredentials: true
     })
+    
     toast.success("Employee deleted successfully!")
+    setPage(1)
+    setReload((prev) => !prev);
     
   
   }
@@ -45,10 +49,11 @@ function EmployeeDetails() {
   
 
  
-  
+ 
 
   useEffect(() => {
     const fetchData = async () => {
+     
       try {
         const response = await axios.get('http://localhost:3000/api/employee/get', {
           params: { search, page, sortBy, order, limit },
@@ -78,7 +83,7 @@ function EmployeeDetails() {
     }
     fetchData();
      
-  }, [search, page, sortBy, order, limit]);
+  }, [search, page, sortBy, order, limit,reload]);
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -102,7 +107,7 @@ function EmployeeDetails() {
       <div className="flex py-1 items-center justify-end gap-8 px-24 bg-gray-300">
         <Dropdown sortBy={sortBy} setSortBy={setSortBy}  />
         <input type="text" name="search" id="search" placeholder='Search' className='border border-gray-300 px-4 py-2 outline-none rounded-lg h-8' value={search} onChange={(e) => setSearch(e.target.value)}  />
-        <input type="text" name="search" id="search" placeholder='Enter' className='border border-gray-300 px-4 py-2 outline-none rounded-lg h-8' value={limit} onChange={(e) => setLimit(e.target.value)}  />
+        <input type="text" name="search" id="search" placeholder='Enter Limit per page' className='border border-gray-300 px-4 py-2 outline-none rounded-lg h-8' value={limit} onChange={(e) => setLimit(e.target.value)}  />
       </div>
      
       
@@ -139,7 +144,7 @@ function EmployeeDetails() {
                 
               ))}
               </td>
-              <td className="border border-gray-300 text-xl h-14 flex justify-center items-center"><p className={`w-4 h-4 rounded-full ${user.f_Status ? 'bg-green-500' : 'bg-red-500'} bg-green-500`}></p></td>
+              <td className="border border-gray-300 text-xl h-24 flex justify-center items-center"><p className={`w-4 h-4 rounded-full ${user.f_Status ? 'bg-green-500' : 'bg-red-500'} bg-green-500`}></p></td>
               <td className="border border-gray-300 text-xl py-2 pl-2">{new Date(user.f_createDate).toLocaleDateString()}</td>
               <td className="border border-gray-300 text-xl py-2 pl-2"><div className="flex gap-3"><button className='px-3 py-1 rounded-2xl bg-[var(--yellow)] text-white' onClick={() => handleEdit(user)}>Edit</button><button onClick={() =>handleDelete(user.f_Id)} className='px-2 py-1 rounded-2xl bg-[var(--red)] text-white'>delete</button></div></td>
 

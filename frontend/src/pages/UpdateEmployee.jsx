@@ -13,6 +13,7 @@ function UpdateEmployee() {
 
     const location = useLocation();
     const {userDetail}=location.state || {};
+    userDetail.f_Image = "";
 
     const [user,setUser]=useState(userDetail)
     const [img, setImg] = useState(null);
@@ -54,12 +55,12 @@ function UpdateEmployee() {
         
 
       
-  const { mutate, isLoading, error } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async (user) => {
       try {
         
 
-        const response = await axios.put(`/api/employee/update/${user.f_Id}`,
+        const response = await axios.put(`/api/employee/update/${user._id}`,
   user,
   {
     withCredentials: true,
@@ -246,7 +247,7 @@ function UpdateEmployee() {
                     </div>
                 </div>
                 <div className='flex justify-center'>
-                    <button type='submit' className='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600'>Submit</button>
+                    <button type='submit' className='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600'>{isPending ? 'Updating...' : 'Update'}</button>
                 </div>
                
             </form>
